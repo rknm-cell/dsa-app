@@ -1,24 +1,43 @@
-const arraynums: number[] = [1,9,2,8,3,7,4,6,5]
+const arraynums: number[] = [1, 9, 2, 8, 3, 7, 4, 6, 5];
 
-function mergeSort(array: number[]){
-    if (array.length <= 1){
-        return array
+function merge(leftArray: number[], rightArray: number[]): number[] {
+    const mergedArray: number[] = [];
+    let leftIndex = 0;
+    let rightIndex = 0;
+    while (leftIndex < leftArray.length && rightIndex < rightArray.length) {
+        if (leftArray[leftIndex] < rightArray[rightIndex]){
+            mergedArray.push(leftArray[leftIndex])
+            leftIndex++
+        }
+        else if (leftArray[leftIndex] > rightArray[rightIndex]){
+            mergedArray.push(rightArray[rightIndex])
+            rightIndex++
+        }
+        
     }
-    const middle = array.length / 2
-
-    let leftArray = array.slice(0, middle)
-    let rightArray = array.slice(middle)
-    let mergedArray = 
-
-    // variable empty left array
-    // variable empty right array
-    // empty merged array
-    // if array is 1, no need to split array
-    // divide array in half, halfway point and less indexes added to empty left array
-    // halfwaypoint + 1 to end of array is right of array
-    // for all nums in array in array left, if left is smaller than right, add left to array, if right is less than right, add to merge array
-    
-    return "[]"
+    while (leftIndex < leftArray.length){
+        mergedArray.push(leftArray[leftIndex])
+        leftIndex++
+    }
+    while (rightIndex < rightArray.length){
+        mergedArray.push(rightArray[rightIndex])
+        rightIndex++
+    }
+  return mergedArray;
 }
+function mergeSort(array: number[]): number[] {
+  if (array.length <= 1) {
+    return array;
+  }
+  const middle = array.length / 2;
+  const leftArray = array.slice(0, middle);
 
-mergeSort(arraynums)
+  const rightArray = array.slice(middle);
+  
+  const sortedLeft = mergeSort(leftArray);
+  const sortedRight = mergeSort(rightArray);
+
+  return merge(sortedLeft, sortedRight);
+}
+console.log(arraynums);
+console.log(mergeSort(arraynums));
