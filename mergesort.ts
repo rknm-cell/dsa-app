@@ -1,17 +1,10 @@
-interface MergeSortSnapshot {
-  step: number;
-  array: number[];
-  leftArray?: number[];
-  rightArray?: number[];
-  mergedArray?: number[];
-}
 
-const snapshots: MergeSortSnapshot[] = [];
-function addSnapshot(snapshot: MergeSortSnapshot){
-  snapshots.push(snapshot)
-}
+
 
 const arraynums: number[] = [1, 9, 2, 8, 3, 7, 4, 6, 5];
+const arraynums2: number[] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+const arraynums3: number[] = [1, 16, 3, 12,  5, 8, 7, 42, 9, 10, 12, 25, 53];
+
 let steps = 0
 function merge(leftArray: number[], rightArray: number[]): number[] {
     const mergedArray: number[] = [];
@@ -19,35 +12,35 @@ function merge(leftArray: number[], rightArray: number[]): number[] {
     let leftIndex = 0;
     let rightIndex = 0;
     while (leftIndex < leftArray.length && rightIndex < rightArray.length) {
-        if (leftArray[leftIndex] < rightArray[rightIndex]){
-            mergedArray.push(leftArray[leftIndex])
+        if (leftArray[leftIndex]! < rightArray[rightIndex]!){
+            mergedArray.push(leftArray[leftIndex]!)
             leftIndex++
         }
-        else if (leftArray[leftIndex] > rightArray[rightIndex]){
-            mergedArray.push(rightArray[rightIndex])
+        else if (leftArray[leftIndex]! > rightArray[rightIndex]!){
+            mergedArray.push(rightArray[rightIndex]!)
             rightIndex++
+        }
+        else{
+            mergedArray.push(leftArray[leftIndex]!)
+            leftIndex++
+            
         }
         
     }
     while (leftIndex < leftArray.length){
-        mergedArray.push(leftArray[leftIndex])
+        mergedArray.push(leftArray[leftIndex]!)
         leftIndex++
     }
     while (rightIndex < rightArray.length){
-        mergedArray.push(rightArray[rightIndex])
+        mergedArray.push(rightArray[rightIndex]!)
         rightIndex++
     }
-    addSnapshot({
-      step: steps,
-      array: mergedArray,
-      leftArray: leftArray,
-      rightArray: rightArray,
-    })
+    
   return mergedArray;
 }
 
 
-function mergeSort(array: number[]): number[] {
+export function mergeSort(array: number[]): number[] {
   if (array.length <= 1) {
     return array;
   }
@@ -56,12 +49,7 @@ function mergeSort(array: number[]): number[] {
   const leftArray = array.slice(0, middle);
   
   const rightArray = array.slice(middle);
-  addSnapshot({
-    step: steps,
-    array: array,
-    leftArray: leftArray,
-    rightArray: rightArray,
-  })
+  
   
   const sortedLeft = mergeSort(leftArray);
   const sortedRight = mergeSort(rightArray);
@@ -69,5 +57,6 @@ function mergeSort(array: number[]): number[] {
   return merge(sortedLeft, sortedRight);
 }
 console.log(arraynums);
-console.log(mergeSort(arraynums));
-console.log(snapshots);
+console.log("mergeSort(arraynums): ", mergeSort(arraynums));
+console.log("mergeSort(arraynums2): ", mergeSort(arraynums2));
+console.log("mergeSort(arraynums3): ", mergeSort(arraynums3));
