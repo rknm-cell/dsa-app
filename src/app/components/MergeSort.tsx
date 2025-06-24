@@ -4,6 +4,7 @@ export interface MergeSortSnapshot {
   leftArray?: number[];
   rightArray?: number[];
   mergedArray?: number[];
+  action: "merge" | "split" | "base";
 }
 const snapshots: MergeSortSnapshot[] = [];
 function addSnapshot(snapshot: MergeSortSnapshot) {
@@ -27,6 +28,7 @@ function merge(leftArray: number[], rightArray: number[]): number[] {
     } else {
       mergedArray.push(leftArray[leftIndex]!);
       leftIndex++;
+      rightIndex++;
     }
   }
   while (leftIndex < leftArray.length) {
@@ -37,17 +39,25 @@ function merge(leftArray: number[], rightArray: number[]): number[] {
     mergedArray.push(rightArray[rightIndex]!);
     rightIndex++;
   }
+
   addSnapshot({
     step: steps,
     array: mergedArray,
     leftArray: leftArray,
     rightArray: rightArray,
+    action: "merge",
   });
+
   return mergedArray;
 }
 
 export function mergeSort(array: number[]): number[] {
   if (array.length <= 1) {
+    addSnapshot({
+      step: steps,
+      array: array,
+      action: "base",
+    });
     return array;
   }
   steps++;
@@ -59,12 +69,14 @@ export function mergeSort(array: number[]): number[] {
     array: array,
     leftArray: leftArray,
     rightArray: rightArray,
+    action: "split",
   });
 
   const sortedLeft = mergeSort(leftArray);
   const sortedRight = mergeSort(rightArray);
+  const mergedArray = merge(sortedLeft, sortedRight);
 
-  return merge(sortedLeft, sortedRight);
+  return mergedArray;
 }
 export function mergeSortHandler(array: number[]): MergeSortSnapshot[] {
   snapshots.length = 0;
@@ -73,6 +85,6 @@ export function mergeSortHandler(array: number[]): MergeSortSnapshot[] {
   return snapshots;
 }
 
-console.log(arraynums);
-console.log(mergeSort(arraynums));
-console.log(snapshots);
+// console.log(arraynums);
+// console.log(mergeSort(arraynums));
+// console.log(snapshots);

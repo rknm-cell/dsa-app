@@ -3,21 +3,16 @@ import {
   type MergeSortSnapshot,
   mergeSortHandler,
 } from "../components/MergeSort";
-import React, { useState } from "react";
+import React, { useState, type JSX } from "react";
 
-const startingArray: number[] = [1, 9, 2, 8, 3, 7, 4, 6, 5];
-export default function Quicksort() {
+const startingArray: number[] = [1, 9, 2, 12, 8, 3, 7, 4, 6, 5];
+export default function MergeSort() {
   const [step, setStep] = useState(0);
   const [snapshots, setSnapshots] = useState<MergeSortSnapshot[]>([]);
 
-  function handleSplit(array: number[]): number[][] {
-    const mid = array.length / 2;
-    const leftArr = array.slice(0, mid);
-    const rightArr = array.slice(mid);
-    return [leftArr, rightArr];
-  }
   const handleSort = () => {
     const snapshotData: MergeSortSnapshot[] = mergeSortHandler(startingArray);
+    console.log("snapshotData: ", snapshotData);
     setSnapshots(snapshotData);
     setStep(0);
   };
@@ -60,14 +55,12 @@ export default function Quicksort() {
             </button>
           </div>
 
-                    
           <div className="flex justify-center gap-4">
             <button
               onClick={() => {
                 setStep(step - 1);
               }}
-              className="px-4 py-2 = text-white bg-zinc-400
-              font-bold rounded transition-colors"
+              className="= rounded bg-zinc-400 px-4 py-2 font-bold text-white transition-colors"
             >
               {"<"}
             </button>
@@ -75,14 +68,74 @@ export default function Quicksort() {
               onClick={() => {
                 setStep(step + 1);
               }}
-              className="px-4 py-2 bg-zinc-400 text-white font-bold rounded transition-colors"
+              className="rounded bg-zinc-400 px-4 py-2 font-bold text-white transition-colors"
             >
               {">"}
-            </button> 
+            </button>
           </div>
-           
         </div>
       </div>
+      {snapshots.length > 0 && (
+        <div className="flex flex-col justify-center">
+          <div className="flex flex-col justify-center text-center text-xl text-zinc-700">
+            Original Array:
+            <div className="flex flex-row justify-center text-xl text-zinc-700">
+              {handleRender(startingArray)}
+            </div>
+          </div>
+          {(() => {
+            const arraySteps: JSX.Element[] = [];
+            const splitSteps: MergeSortSnapshot[] = [];
+
+            snapshots.slice(0, step + 1).forEach((snapshot, index) => {
+              if (snapshot.action === "split") {
+                splitSteps.push(snapshot);
+                arraySteps.push(
+                  <div
+                    key={`split-${index}`}
+                    className="flex flex-row text-center"
+                  >
+                    {handleRender(snapshot.leftArray!)}
+                    {handleRender(snapshot.rightArray!)}
+                  </div>,
+                );
+              } else if (snapshot.action === "merge") {
+                const matchingIndex = splitSteps.findIndex(
+                  (split) =>
+                    split.leftArray?.length === snapshot.leftArray?.length &&
+                    split.rightArray?.length === snapshot.rightArray?.length,
+                );
+                if (matchingIndex !== -1) {
+                  const splitsToRemove = splitSteps.length - matchingIndex;
+                  for (let i = 0; i < splitsToRemove; i++) {
+                    splitSteps.pop();
+                    arraySteps.pop();
+                  }
+                  arraySteps.push(
+                    <div
+                      key={`merge-${index}`}
+                      className="flex flex-row text-center text-xl text-zinc-700"
+                    >
+                      {handleRender(snapshot.array!)}
+                    </div>,
+                  );
+                }
+              } else {
+                splitSteps.push(snapshot);
+                arraySteps.push(
+                  <div
+                    key={`merge-${index}`}
+                    className="flex flex-row text-center text-xl text-zinc-700"
+                  >
+                    {handleRender(snapshot.array!)}
+                  </div>,
+                );
+              }
+            });
+            return arraySteps;
+          })()}
+        </div>
+      )}
     </div>
   );
 }
