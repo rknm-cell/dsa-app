@@ -10,6 +10,8 @@ export default function MergeSort() {
   const [step, setStep] = useState(0);
   const [snapshots, setSnapshots] = useState<MergeSortSnapshot[]>([]);
 
+  
+
   const handleSort = () => {
     const snapshotData: MergeSortSnapshot[] = mergeSortHandler(startingArray);
     console.log("snapshotData: ", snapshotData);
@@ -27,6 +29,13 @@ export default function MergeSort() {
       </div>
     ));
   }
+  const stepInstructions = {
+    base: "Base case: The array is already sorted",
+    split: "Split the array into two halves",
+    sort: "Sort each half",
+    merge: "Merge the two halves",
+  }
+  
 
   return (
     <div className="min-h-screen from-purple-900 to-blue-900 p-8 text-white">
@@ -40,6 +49,9 @@ export default function MergeSort() {
             {snapshots.length > 0 && snapshots[step] && (
               <div className="mb-4 text-center">
                 <p>Step: {snapshots[step].step}</p>
+                <div className="flex justify-center">
+                  {step !== 0 ? handleRender(snapshots[(step - 1)]?.array!) : <></>}
+                </div>
                 <div className="flex justify-center">
                   {handleRender(snapshots[step].array)}
                 </div>
@@ -75,67 +87,7 @@ export default function MergeSort() {
           </div>
         </div>
       </div>
-      {snapshots.length > 0 && (
-        <div className="flex flex-col justify-center">
-          <div className="flex flex-col justify-center text-center text-xl text-zinc-700">
-            Original Array:
-            <div className="flex flex-row justify-center text-xl text-zinc-700">
-              {handleRender(startingArray)}
-            </div>
-          </div>
-          {(() => {
-            const arraySteps: JSX.Element[] = [];
-            const splitSteps: MergeSortSnapshot[] = [];
-
-            snapshots.slice(0, step + 1).forEach((snapshot, index) => {
-              if (snapshot.action === "split") {
-                splitSteps.push(snapshot);
-                arraySteps.push(
-                  <div
-                    key={`split-${index}`}
-                    className="flex flex-row text-center"
-                  >
-                    {handleRender(snapshot.leftArray!)}
-                    {handleRender(snapshot.rightArray!)}
-                  </div>,
-                );
-              } else if (snapshot.action === "merge") {
-                const matchingIndex = splitSteps.findIndex(
-                  (split) =>
-                    split.leftArray?.length === snapshot.leftArray?.length &&
-                    split.rightArray?.length === snapshot.rightArray?.length,
-                );
-                if (matchingIndex !== -1) {
-                  const splitsToRemove = splitSteps.length - matchingIndex;
-                  for (let i = 0; i < splitsToRemove; i++) {
-                    splitSteps.pop();
-                    arraySteps.pop();
-                  }
-                  arraySteps.push(
-                    <div
-                      key={`merge-${index}`}
-                      className="flex flex-row text-center text-xl text-zinc-700"
-                    >
-                      {handleRender(snapshot.array!)}
-                    </div>,
-                  );
-                }
-              } else {
-                splitSteps.push(snapshot);
-                arraySteps.push(
-                  <div
-                    key={`merge-${index}`}
-                    className="flex flex-row text-center text-xl text-zinc-700"
-                  >
-                    {handleRender(snapshot.array!)}
-                  </div>,
-                );
-              }
-            });
-            return arraySteps;
-          })()}
-        </div>
-      )}
+      
     </div>
   );
 }
