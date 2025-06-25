@@ -5,10 +5,8 @@ const arraynums: number[] = [1, 9, 2, 8, 3, 7, 4, 6, 5];
 const arraynums2: number[] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 const arraynums3: number[] = [1, 16, 3, 12,  5, 8, 7, 42, 9, 10, 12, 25, 53];
 
-let steps = 0
 function merge(leftArray: number[], rightArray: number[]): number[] {
     const mergedArray: number[] = [];
-    steps++
     let leftIndex = 0;
     let rightIndex = 0;
     while (leftIndex < leftArray.length && rightIndex < rightArray.length) {
@@ -44,8 +42,7 @@ export function mergeSort(array: number[]): number[] {
   if (array.length <= 1) {
     return array;
   }
-  steps++
-  const middle = array.length / 2;
+  const middle = Math.ceil(array.length / 2)
   const leftArray = array.slice(0, middle);
   
   const rightArray = array.slice(middle);
