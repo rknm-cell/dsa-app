@@ -4,7 +4,7 @@ export interface MergeSortSnapshot {
   leftArray?: number[];
   rightArray?: number[];
   mergedArray?: number[];
-  action: "merge" | "split" | "base";
+  action: "merge" | "split" | "base" | "sort";
 }
 const snapshots: MergeSortSnapshot[] = [];
 function addSnapshot(snapshot: MergeSortSnapshot) {
@@ -30,6 +30,13 @@ function merge(leftArray: number[], rightArray: number[]): number[] {
       leftIndex++;
       rightIndex++;
     }
+    addSnapshot({
+      step: steps,
+      array: mergedArray,
+      leftArray: leftArray,
+      rightArray: rightArray,
+      action: "sort",
+    });
   }
   while (leftIndex < leftArray.length) {
     mergedArray.push(leftArray[leftIndex]!);
@@ -53,6 +60,7 @@ function merge(leftArray: number[], rightArray: number[]): number[] {
 
 export function mergeSort(array: number[]): number[] {
   if (array.length <= 1) {
+    steps++;
     addSnapshot({
       step: steps,
       array: array,
