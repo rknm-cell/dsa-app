@@ -35,7 +35,7 @@ function merge(left: number[], right: number[], mergeNode: Partial<MergeSortNode
   return mergedArr.concat(left.slice(l)).concat(right.slice(r));
 }
 
-export function mergeSort(arr: number[], node: Partial<MergeSortNode>, animationStates:{frames: Partial<MergeSortNode>[], tree: Partial<MergeSortNode> }): number[] {
+export function mergeSortAnimation(arr: number[], node: Partial<MergeSortNode>, animationStates:{frames: Partial<MergeSortNode>[], tree: Partial<MergeSortNode> }): number[] {
   // adds inddividual elements to the merge node
   animationStates.frames.push(structuredClone(animationStates.tree))
   if (arr.length <= 1) {
@@ -57,8 +57,8 @@ export function mergeSort(arr: number[], node: Partial<MergeSortNode>, animation
   };
   animationStates.frames.push(structuredClone(animationStates.tree))
 
-  const sortedLeft = mergeSort(left, node.left!, animationStates);
-  const sortedRight = mergeSort(right, node.right!, animationStates);
+  const sortedLeft = mergeSortAnimation(left, node.left!, animationStates);
+  const sortedRight = mergeSortAnimation(right, node.right!, animationStates);
 
   const sortedArray = merge(sortedLeft, sortedRight, node, animationStates);
   
@@ -69,5 +69,10 @@ export function mergeSort(arr: number[], node: Partial<MergeSortNode>, animation
 
 const animationState = { frames: [], tree: {} };
 console.log("Original array:", arraynums);
-const result = mergeSort(arraynums, animationState.tree, animationState);
+const result = mergeSortAnimation(arraynums, animationState.tree, animationState);
 
+export function mergeSortHandler(arr: number[]) {
+  const animationState = { frames: [], tree: {} };
+  mergeSortAnimation(arr, animationState.tree, animationState);
+  return animationState;
+}
