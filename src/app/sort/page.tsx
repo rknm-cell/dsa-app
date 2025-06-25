@@ -10,8 +10,6 @@ export default function MergeSort() {
   const [step, setStep] = useState(0);
   const [snapshots, setSnapshots] = useState<MergeSortSnapshot[]>([]);
 
-  
-
   const handleSort = () => {
     const snapshotData: MergeSortSnapshot[] = mergeSortHandler(startingArray);
     console.log("snapshotData: ", snapshotData);
@@ -32,10 +30,10 @@ export default function MergeSort() {
   const stepInstructions = {
     base: "Base case: The array is already sorted",
     split: "Split the array into two halves",
-    sort: "Sort each half",
+    compare: "Compare the values looking for the lower value",
     merge: "Merge the two halves",
-  }
-  
+  };
+  const baseStyle = "bg-teal-400";
 
   return (
     <div className="min-h-screen from-purple-900 to-blue-900 p-8 text-white">
@@ -48,13 +46,28 @@ export default function MergeSort() {
           <div className="mb-6 flex flex-row justify-center">
             {snapshots.length > 0 && snapshots[step] && (
               <div className="mb-4 text-center">
-                <p>Step: {snapshots[step].step}</p>
-                <div className="flex justify-center">
-                  {step !== 0 ? handleRender(snapshots[(step - 1)]?.array!) : <></>}
+                <p className="text-lg text-zinc-700">
+                  Step: {snapshots[step].action}
+                </p>
+                <div className="flex flex-row">
+                  {snapshots[step].leftArray && (
+                    <div className="flex flex-row m-4">
+                      {handleRender(snapshots[step].leftArray)}
+                    </div>
+                  )}
+                  {snapshots[step].rightArray && (
+                    <div className="flex flex-row m-4">
+                      {handleRender(snapshots[step].rightArray)}
+                    </div>
+                  )}
                 </div>
-                <div className="flex justify-center">
-                  {handleRender(snapshots[step].array)}
-                </div>
+                {snapshots[step].action !== "sort" ? (
+                  <div className="flex justify-center">
+                    {handleRender(snapshots[step].array)}
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
             )}
           </div>
@@ -87,7 +100,6 @@ export default function MergeSort() {
           </div>
         </div>
       </div>
-      
     </div>
   );
 }

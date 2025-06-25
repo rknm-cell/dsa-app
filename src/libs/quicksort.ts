@@ -10,12 +10,13 @@ export default function QuickSort(array: number[]): number[] {
   const rightSide = [];
 
   for (let i = 0; i < array.length; i++) {
-    if (array[i] < pivot) {
-      leftSide.push(array[i]);
-    } else if (array[i] > pivot) {
+    if (array[i]! < pivot!) {
+      leftSide.push(array[i]!);
+    } else if (array[i] > pivot!) {
       rightSide.push(array[i]);
     }
   }
+  console.log("Sorted Left: ", leftSide, "Pivot: ", pivot, "Sorted Right: ", leftSide)
   const sortedLeft = QuickSort(leftSide);
   const sortedRight = QuickSort(rightSide);
   const combinedArray = [...sortedLeft, pivot,...sortedRight];
