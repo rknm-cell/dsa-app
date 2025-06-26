@@ -35,16 +35,21 @@ function MergeSortNode({ node }: { node: Partial<MergeSortNode> }) {
           ))}
         </div>
       )}
-      <motion.div className="flex flex-row">
+      <motion.div transition={{ease: "easeIn", duration: 1}}className="flex flex-row">
         <motion.div
+          className="mr-2 flex flex-row gap-2"
+          key={node.left?.originalArr?.join(",")}
           initial={{ transform: "translateY(-40px)" }}
           animate={{ transform: "translateY(0px) translateX(-10px)" }}
           transition={{ type: "spring" }}
-          className="mr-2 flex flex-row gap-2"
         >
           {node.left && <MergeSortNode node={node.left} />}
         </motion.div>
-        <motion.div className="ml-2 flex flex-row gap-2">
+        <motion.div className="mr-2 flex flex-row gap-2"
+          key={node.right?.originalArr?.join(",")}
+          initial={{ transform: "translateY(-40px)" }}
+          animate={{ transform: "translateY(0px) translateX(10px)" }}
+          transition={{ type: "spring" }}>
           {node.right && <MergeSortNode node={node.right} />}
         </motion.div>
       </motion.div>
