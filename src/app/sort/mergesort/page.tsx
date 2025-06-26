@@ -5,7 +5,7 @@ import {
   mergeSortHandler,
 } from "../../../libs/mergesort5";
 import { motion } from "motion/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const startingArray: number[] = [1, 9, 2, 12, 8, 3, 7, 4, 6, 5];
 
@@ -18,49 +18,73 @@ const animationState = {
 };
 mergeSortAnimation(startingArray, mergeSortTree, animationState);
 
-function MergeSortNode({ node }: { node: Partial<MergeSortNode> }) {
+function MergeSortNode({
+  node,
+  nodePath = "",
+}: {
+  node: Partial<MergeSortNode>;
+  nodePath?: string;
+}) {
   if (!node.originalArr) return null;
 
   return (
-    <div className="flex flex-col justify-center">
+    <div className="flex flex-col">
       {node.originalArr && (
         <div className="flex flex-row">
           {node.originalArr.map((n, i) => (
-            <div
+            <motion.div
+              layoutId={`${nodePath}-number-${n}`}
+              id={`original-${n}`}
               key={i}
-              className="m-1 flex h-8 min-w-[30px] items-center justify-center border-2 p-2 text-center font-bold text-zinc-900"
+              className="m-1 flex h-8 min-w-[30px] items-center border-2 p-2 text-center font-bold text-zinc-900"
             >
               {n}
-            </div>
+            </motion.div>
           ))}
         </div>
       )}
-      <motion.div transition={{ease: "easeIn", duration: 1}}className="flex flex-row">
+      <motion.div
+        transition={{ ease: "easeIn", duration: 1 }}
+        className="flex flex-row"
+      >
         <motion.div
           className="mr-2 flex flex-row gap-2"
           key={node.left?.originalArr?.join(",")}
           initial={{ transform: "translateY(-40px)" }}
           animate={{ transform: "translateY(0px) translateX(-10px)" }}
-          transition={{ type: "spring" }}
+          transition={{ type: "spring", layout: { duration: 0.1 }, delay: 0.1 }}
         >
-          {node.left && <MergeSortNode node={node.left} />}
+          {node.left && (
+            <MergeSortNode node={node.left} nodePath={`${nodePath}-left`} />
+          )}
         </motion.div>
-        <motion.div className="mr-2 flex flex-row gap-2"
+        <motion.div
+          className="mr-2 flex flex-row gap-2"
           key={node.right?.originalArr?.join(",")}
           initial={{ transform: "translateY(-40px)" }}
           animate={{ transform: "translateY(0px) translateX(10px)" }}
-          transition={{ type: "spring" }}>
-          {node.right && <MergeSortNode node={node.right} />}
+          transition={{ type: "spring", layout: { duration: 0.1 }, delay: 0.1 }}
+        >
+          {node.right && (
+            <MergeSortNode node={node.right} nodePath={`${nodePath}-right`} />
+          )}
         </motion.div>
       </motion.div>
       {node.sortedArr && (
-        <div className="flex flex-row">
+        <motion.div className="flex flex-row">
           {node.sortedArr.map((n, i) => (
-            <div className="gap-2 border-2" key={i}>
+            <motion.div
+              layoutId={`${nodePath}-number-${n}`}
+              key={i}
+              className="m-1 flex h-8 min-w-[30px] items-center border-2 p-2 text-center font-bold text-zinc-900"
+              initial={{ transform: "translateY(0px)" }}
+              animate={{ transform: "translateY(0px)" }}
+              transition={{ type: "spring", layout: { duration: 0.2, delay: i * 0.1 }, delay: i * 0.5}}
+            >
               {n}
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
     </div>
   );
@@ -71,6 +95,16 @@ export default function MergeSortVisualizer() {
 
   const handleNext = () => setStep(step + 1);
   const handlePrev = () => setStep(step - 1);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (step < animationState.frames.length - 1) {
+        setStep(step + 1);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [step]);
 
   const stepInstructions = {
     base: "Base case: The array is already sorted",
