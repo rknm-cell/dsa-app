@@ -1,10 +1,10 @@
 "use client";
 import { type MergeSortNode, mergeSortAnimation, mergeSortHandler } from "../../../libs/mergesort5";
-import React, { useState, type JSX } from "react";
+import React, { useState } from "react";
 
 const startingArray: number[] = [1, 9, 2, 12, 8, 3, 7, 4, 6, 5];
 
-const mergeSortTree: MergeSortNode = {
+const mergeSortTree: Partial<MergeSortNode> = {
     originalArr: structuredClone(startingArray)
     
     
@@ -15,7 +15,7 @@ const animationState = {
 }
 mergeSortAnimation(startingArray, mergeSortTree, animationState);
 
-function MergeSortNode({node}: {node: MergeSortNode}) {
+function MergeSortNode({node}: {node: Partial<MergeSortNode>}) {
     if (!node.originalArr) 
         return null;
 
@@ -27,6 +27,17 @@ function MergeSortNode({node}: {node: MergeSortNode}) {
                     {n}
                 </div>
             ))}</div>}
+            <div className="flex flex-row">
+
+            <div className="flex flex-row gap-2 mr-2">
+            {node.left && <MergeSortNode node={node.left}/>}
+            </div>
+            <div className="flex flex-row gap-2 ml-2">
+            {node.right && <MergeSortNode node={node.right}/>}
+            </div>
+            </div>
+            {node.sortedArr && <div className="flex flex-row">
+              {node.sortedArr.map((n, i) => (<div key={i}>{n}</div>))}</div>}
     </div>
   )
 }
@@ -42,6 +53,8 @@ export default function MergeSortVisualizer() {
     setFrames(frames);
     setStep(0);
   };
+  const handleNext = () => setStep(step + 1);
+  const handlePrev = () => setStep(step - 1);
 
   const stepInstructions = {
     base: "Base case: The array is already sorted",
@@ -49,7 +62,6 @@ export default function MergeSortVisualizer() {
     compare: "Compare the values looking for the lower value",
     merge: "Merge the two halves",
   };
-  const baseStyle = "bg-teal-400";
 
   return (
     <div className="min-h-screen from-purple-900 to-blue-900 p-8 text-white">
@@ -58,6 +70,8 @@ export default function MergeSortVisualizer() {
           Merge Sort
           <MergeSortNode node={animationState.frames[step]} />
           
+          <button onClick={handlePrev}> {'<'} </button>
+          <button onClick={handleNext}> {'>'} </button>
           
         </h1>
       </div>
