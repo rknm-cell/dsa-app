@@ -55,7 +55,7 @@ export function mergeSortAnimation(
   },
 ): number[] {
   // adds individual elements to the merge node
-  animationStates.frames.push(structuredClone(animationStates.tree));
+  // animationStates.frames.push(structuredClone(animationStates.tree));
   if (arr.length <= 1) {
     node.sortedArr = structuredClone(arr);
     return arr;
