@@ -4,11 +4,11 @@ export type QuickSortNode = {
   unsortedArr: number[];
   left?: Partial<QuickSortNode>;
   right?: Partial<QuickSortNode>;
-  pivot: Partial<QuickSortNode>;
+  pivot?: Partial<QuickSortNode>;
   sortedArr: number[];
 };
 
-function quickSortAnimation(
+export function quickSortAnimation(
   arr: number[],
   node: Partial<QuickSortNode>,
   animationStates: {
@@ -17,9 +17,12 @@ function quickSortAnimation(
   },
 ): number[] {
   if (arr.length <= 1) {
+    node.sortedArr = structuredClone(arr);
     return arr;
   }
   const pivot = arr.pop();
+
+  node.pivot = {pivot: structuredClone(pivot)}
   const left = [];
   const right = [];
 
@@ -33,23 +36,29 @@ function quickSortAnimation(
     }
   }
   node.left = {
-    unsortedArr: structuredClone(arr),
+    unsortedArr: structuredClone(left),
   };
 
   animationStates.frames.push(structuredClone(animationStates.tree));
+
   node.right = {
-    unsortedArr: structuredClone(arr),
+    unsortedArr: structuredClone(right),
   };
 
   animationStates.frames.push(structuredClone(animationStates.tree));
-  node.pivot = {pivot: structuredClone(pivot)}
 
-  const sortedLeft = quickSortAnimation(left);
-  const sortedRight = quickSortAnimation(right);
-  const sortedArr = [...sortedLeft, pivot, ...sortedRight]
+  const sortedLeft = quickSortAnimation(left, node.left, animationStates);
+  const sortedRight = quickSortAnimation(right, node.right, animationStates);
+  const sortedArr = [...sortedLeft, pivot, ...sortedRight];
 
   node.sortedArr = structuredClone(sortedArr);
   animationStates.frames.push(structuredClone(animationStates.tree));
 
   return [...sortedLeft, pivot, ...sortedRight];
+}
+
+export function quickSortHandler(arr: number[]) {
+  const animationState = { frames: [], tree: {} };
+  quickSortAnimation(arr, animationState.tree, animationState)
+  return animationState
 }
