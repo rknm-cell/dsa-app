@@ -16,7 +16,7 @@ export default function QuickSort(array: number[]): number[] {
       rightSide.push(array[i]);
     }
   }
-  console.log("Sorted Left: ", leftSide, "Pivot: ", pivot, "Sorted Right: ", leftSide)
+  console.log("Sorted Left: ", leftSide, "Pivot: ", pivot, "Sorted Right: ", rightSide)
   const sortedLeft = QuickSort(leftSide);
   const sortedRight = QuickSort(rightSide);
   const combinedArray = [...sortedLeft, pivot,...sortedRight];
