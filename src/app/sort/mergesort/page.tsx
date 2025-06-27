@@ -96,15 +96,15 @@ export default function MergeSortVisualizer() {
   const handleNext = () => setStep(step + 1);
   const handlePrev = () => setStep(step - 1);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (step < animationState.frames.length - 1) {
-        setStep(step + 1);
-      }
-    }, 500);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     if (step < animationState.frames.length - 1) {
+  //       setStep(step + 1);
+  //     }
+  //   }, 500);
 
-    return () => clearTimeout(timer);
-  }, [step]);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   const stepInstructions = {
     base: "Base case: The array is already sorted",
