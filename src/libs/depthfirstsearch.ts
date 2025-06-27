@@ -32,25 +32,23 @@ c.left = f;
 c.right = g;
 
 //write your solution here
-const dfs = (root: TreeNode, target:TreeNode):TreeNode => {
+const dfs = (root: TreeNode | null, target: number): TreeNode | null => {
+    if (root === null) {
+        return null
+    }
 
-  if (root.left === null && root.right === null){
-    
-    return false
-  }
   
-  if (root.value !== target){
-    dfs(, target)
-
+  
+  if (root.value.val === target) {
+    return root;
+  }
+  const left = dfs(root.left, target); 
+  if (left !== null) {
+    return left
   }
 
+  const right = dfs(root.right, target);
+  return right
+};
 
-
-
-
-
-
-    return root
-}
-
-dfs(a, 7)
+console.log(dfs(a, 7));
