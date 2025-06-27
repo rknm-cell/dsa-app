@@ -2,6 +2,8 @@ import { arraynums, arraynums2, arraynums3 } from "./constants";
 
 
 function selectionSort(arr: number[]):number[]{
+    for 
+
     return arr
 }
 

@@ -1,38 +1,55 @@
-
 import { arraynums, arraynums2, arraynums3 } from "./constants";
 
+export type QuickSortNode = {
+  unsortedArr: number[];
+  left?: Partial<QuickSortNode>;
+  right?: Partial<QuickSortNode>;
+  pivot: Partial<QuickSortNode>;
+  sortedArr: number[];
+};
 
-function quickSort(arr: number[]):number[]{
-    if (arr.length <= 1){
-        return arr
+function quickSortAnimation(
+  arr: number[],
+  node: Partial<QuickSortNode>,
+  animationStates: {
+    frames: Partial<QuickSortNode>[];
+    tree: Partial<QuickSortNode>;
+  },
+): number[] {
+  if (arr.length <= 1) {
+    return arr;
+  }
+  const pivot = arr.pop();
+  const left = [];
+  const right = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i]! < pivot!) {
+      left.push(arr[i]);
+    } else if (arr[i]! > pivot!) {
+      right.push(arr[i]);
+    } else {
+      left.push(arr[i]);
     }
-    const pivot = arr.pop()
-    const left = []
-    const right = []
+  }
+  node.left = {
+    unsortedArr: structuredClone(arr),
+  };
 
-    for (let i = 0; i < arr.length; i++){
-        if (arr[i] < pivot){
-            left.push(arr[i])
-        } else if (arr[i] > pivot){
-            right.push(arr[i])
-        } else {
-            left.push(arr[i])
-        }
-    }
+  animationStates.frames.push(structuredClone(animationStates.tree));
+  node.right = {
+    unsortedArr: structuredClone(arr),
+  };
 
-    const sortedLeft = quickSort(left)
-    const sortedRight = quickSort(right)
+  animationStates.frames.push(structuredClone(animationStates.tree));
+  node.pivot = {pivot: structuredClone(pivot)}
 
-    return [...sortedLeft, pivot, ...sortedRight]
+  const sortedLeft = quickSortAnimation(left);
+  const sortedRight = quickSortAnimation(right);
+  const sortedArr = [...sortedLeft, pivot, ...sortedRight]
 
+  node.sortedArr = structuredClone(sortedArr);
+  animationStates.frames.push(structuredClone(animationStates.tree));
 
-
-
+  return [...sortedLeft, pivot, ...sortedRight];
 }
-console.log(arraynums)
-console.log(quickSort(arraynums))
-console.log(arraynums2)
-console.log(quickSort(arraynums2))
-console.log(arraynums3)
-console.log(quickSort(arraynums3))
-
