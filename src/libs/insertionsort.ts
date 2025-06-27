@@ -1,7 +1,7 @@
 import { arraynums, arraynums2, arraynums3 } from "./constants";
 
 
-export default function SelectionSort(array: number[]):(number[]){
+export default function insertionSort(array: number[]):(number[]){
 
     const arr = array
 
@@ -11,7 +11,7 @@ export default function SelectionSort(array: number[]):(number[]){
             if (arr[i] > arr[j]){
 
             } 
-            arr.splice(arr[j], 1,)
+            arr.splice(arr[j], 1)
             arr.
 
 
